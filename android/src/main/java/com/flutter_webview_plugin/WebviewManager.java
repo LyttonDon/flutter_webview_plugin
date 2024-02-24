@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.GeolocationPermissions;
+import android.webkit.JavascriptInterface;
 import android.webkit.SslErrorHandler;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
@@ -133,6 +134,7 @@ class WebviewManager {
         this.context = context;
         this.resultHandler = new ResultHandler();
         this.platformThreadHandler = new Handler(context.getMainLooper());
+        webView.addJavascriptInterface(new Android2Js(), "injectedObject");
         webViewClient = new BrowserClient() {
             @Override
             public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
@@ -266,6 +268,17 @@ class WebviewManager {
             }
         });
         registerJavaScriptChannelNames(channelNames);
+    }
+
+    public class Android2Js extends Object {
+
+        @JavascriptInterface
+        public void gotoCaseInfo(int id) {
+            System.out.println("Android2Js >>>>>>>>>>>>>>gotoCaseInfo");
+            FlutterWebviewPlugin.channel.invokeMethod("gotoCaseInfo", id);
+//            if (id > 0) {
+//            }
+        }
     }
 
     private Uri getOutputFilename(String intentType) {
