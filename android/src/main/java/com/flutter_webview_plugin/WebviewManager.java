@@ -283,6 +283,7 @@ class WebviewManager {
             mAct.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    System.out.println("Android2Js >>>>>>>>>>>>>>runOnUiThread=" + id);
                     FlutterWebviewPlugin.channel.invokeMethod("gotoCaseInfo", id);
                 }
             });
