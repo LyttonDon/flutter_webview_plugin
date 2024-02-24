@@ -134,7 +134,6 @@ class WebviewManager {
         this.context = context;
         this.resultHandler = new ResultHandler();
         this.platformThreadHandler = new Handler(context.getMainLooper());
-        webView.addJavascriptInterface(new Android2Js(activity), "injectedObject");
         webViewClient = new BrowserClient() {
             @Override
             public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
@@ -381,6 +380,7 @@ class WebviewManager {
             webView.addJavascriptInterface(
                     new JavaScriptChannel(FlutterWebviewPlugin.channel, channelName, platformThreadHandler), channelName);
         }
+        webView.addJavascriptInterface(new Android2Js(activity), "injectedObject");
     }
 
     void openUrl(
