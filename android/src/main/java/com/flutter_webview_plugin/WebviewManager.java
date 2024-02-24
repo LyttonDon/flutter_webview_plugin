@@ -134,7 +134,7 @@ class WebviewManager {
         this.context = context;
         this.resultHandler = new ResultHandler();
         this.platformThreadHandler = new Handler(context.getMainLooper());
-        webView.addJavascriptInterface(new Android2Js(), "injectedObject");
+        webView.addJavascriptInterface(new Android2Js(activity), "injectedObject");
         webViewClient = new BrowserClient() {
             @Override
             public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
@@ -272,10 +272,20 @@ class WebviewManager {
 
     public class Android2Js extends Object {
 
+        Activity mAct;
+        public Android2Js(Activity activity) {
+            mAct = activity;
+        }
+
         @JavascriptInterface
-        public void gotoCaseInfo(int id) {
+        public void gotoCaseInfo(final int id) {
             System.out.println("Android2Js >>>>>>>>>>>>>>gotoCaseInfo");
-            FlutterWebviewPlugin.channel.invokeMethod("gotoCaseInfo", id);
+            mAct.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    FlutterWebviewPlugin.channel.invokeMethod("gotoCaseInfo", id);
+                }
+            });
 //            if (id > 0) {
 //            }
         }
